@@ -17,27 +17,7 @@
             </header>
             
             <section class="board">
-                <div class="team winning">
-                    <h2 class="team__name">Chicago Bulls</h2>
-                    <p class="team__score">234</p>
-
-                    <ul class="team__action">
-                        <li>+1</li>
-                        <li>+2</li>
-                        <li>+3</li>
-                    </ul>
-                </div>
-
-                <div class="team losing">
-                    <h2 class="team__name">La Bourboule</h2>
-                    <p class="team__score">1</p>
-
-                    <ul class="team__action">
-                        <li>+1</li>
-                        <li>+2</li>
-                        <li>+3</li>
-                    </ul>
-                </div>
+                
             </section>
 
             <section class="logs"> 
@@ -56,6 +36,20 @@
                 </ul>
             </section>
 
+        </div>
+
+        <div id="template">
+
+            <div class="team" id="template_team">
+                    <h2 class="team__name">Chicago Bulls</h2>
+                    <p class="team__score">234</p>
+
+                    <ul class="team__action">
+                        <li data-increment="1">+1</li>
+                        <li data-increment="2">+2</li>
+                        <li data-increment="3">+3</li>
+                    </ul>
+            </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>

@@ -63,6 +63,11 @@ header h1 {
 }
 
 
+/* TEMPLATES */
+#template {
+    display: none;
+}
+
 /* TEAM BOARD */
 
 .board {
