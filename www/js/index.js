@@ -9,9 +9,12 @@ function runApplication() {
 
     loadTeams(function(team){
         displayTeam(team);
-        registerActionButtons(team.element);
+        registerActionButtons(team);
     });
     
+    loadLog(Object.keys(teams), function(logLine){
+        displayLogLine(logLine);
+    });
 }
 
 function connectSqlite(){
@@ -49,7 +52,8 @@ function initSchemaIfNeeded() {
 
 }
 
-function registerActionButtons(teamElement){
+function registerActionButtons(team){
+    var teamElement = team.element;
     var buttons = teamElement.querySelectorAll(".team__action li");
     for (var i = 0; i<buttons.length; i++) {
 
@@ -58,6 +62,14 @@ function registerActionButtons(teamElement){
             var increment = event.target.getAttribute("data-increment");
 
             updateScore(teamId, parseInt(increment));
+            displayScore(teamId);
+
+            displayLogLine({
+                team: team.label,
+                score: parseInt(increment),
+                date: Date.now()
+            });
+
         });
     }
     
@@ -70,7 +82,7 @@ function updateScore(teamId, scoreIncrement) {
         tx.executeSql('INSERT INTO MatchLog (logDate, scoreIncrement, teamId) VALUES (date("now"), ?, ?)', [scoreIncrement, teamId]);
     });
 
-    displayScore(teamId);
+    
 }
 
 
@@ -119,6 +131,36 @@ function displayScore(teamId) {
 }
 
 
+function loadLog(teamIds, callback) {
+    runTransaction(function(tx){
+
+        var query = "SELECT Team.label as log_team, scoreIncrement as log_score, logDate as log_date FROM Team LEFT JOIN MatchLog ON Team.id = MatchLog.teamId GROUP BY Team.id"
+        tx.executeSql(query, [], function(tx, result) {
+
+            for(var i=0; i<result.rows.length; i++) {
+
+                callback({
+                    team: result.rows.item(i).log_team,
+                    score: result.rows.item(i).log_score,
+                    date: result.rows.item(i).log_date
+                });
+            }
+
+        });  
+    })
+}
+
+
+
+function displayLogLine(logLine) {
+    var lineElementClone = cloneTemplate('template_log_line');
+
+    lineElementClone.querySelector(".log__team").innerHTML = logLine.team;
+    lineElementClone.querySelector(".log__score").innerHTML = logLine.score;
+    lineElementClone.querySelector(".log__time").innerHTML = logLine.date;
+
+    document.querySelector(".logs ul").appendChild(lineElementClone);
+}
 
 
 
